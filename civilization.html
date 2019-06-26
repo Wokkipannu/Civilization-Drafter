@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Civ</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container" style="padding-top:75px">
+      <h4>Pirkka Civilization Generator</h4>
+      <hr/>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="pList">
+          <!-- Data will be populated by JavaScript -->
+        </tbody>
+      </table>
+      <button type="button" id="addPlayer" onclick="addPlayer()" class="btn btn-success btn-sm">Add player</button>
+      <br/><br/>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="vCheckbox">
+            <label class="custom-control-label" for="vCheckbox">Vanilla Civilizations</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="rfCheckbox">
+            <label class="custom-control-label" for="rfCheckbox">Rise & Fall Civilizations</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="gsCheckbox">
+            <label class="custom-control-label" for="gsCheckbox">Gathering Storm Civilizations</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label for="rerolls">Rerolls</label>
+          <input type="number" class="form-control" id="rerolls" value="0">
+        </div>
+      </div>      
+      <br/>
+      <button type="button" id="run" class="btn btn-primary btn-sm">Randomize civilizations</button>
+
+      <hr/>
+
+      <h4>Result</h4>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Civilization</th>
+            <th>Rerolls</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="result">
+          <!-- Data will be populated by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <script type="text/javascript">
+      let selectionPool = [];
+      let players = [];
+      let resultHTML = '';
+      let html = '';
+      let rerolls = null;
+
+      let civilizations = [
+        "Teddy Roosevelt",
+        "Saladin",
+        "John Curtin",
+        "Montezuma",
+        "Pedro II",
+        "Qin Shi Huang",
+        "Cleopatra",
+        "Victoria",
+        "Frederick Barbarossa",
+        "Perciles",
+        "Gorgo",
+        "Gandhi",
+        "Gitarja",
+        "Hojo Tokimune",
+        "Jayavarman VII",
+        "Mvemba a Nzinga",
+        "Alexander",
+        "Harald Hardrada",
+        "Amanitore",
+        "Cyrus",
+        "Jadwiga",
+        "Trajan",
+        "Peter",
+        "Tomyris",
+        "Philip II",
+        "Gilgamesh"
+      ];
+
+      let rfCivilizations = [
+        "Poundmaker",
+        "Wilhelmina",
+        "Tamar",
+        "Chandragupta",
+        "Seondeok",
+        "Lautaro",
+        "Genghis Khan",
+        "Robert the Bruce",
+        "Shaka"
+      ];
+
+      let gsCivilizations = [
+        "Wilfrid Laurier",
+        "Eleanor of Aquitaine",
+        "Eleanor of Aquitaine (French)",
+        "Matthias Corvinus",
+        "Pachacuti",
+        "Mansa Musa",
+        "Kupe",
+        "Suleiman",
+        "Dido",
+        "Kristina"
+      ];
+
+      function runSelection() {
+        let toggleV = document.getElementById("vCheckbox").checked;
+        let toggleRF = document.getElementById("rfCheckbox").checked;
+        let toggleGS = document.getElementById("gsCheckbox").checked;
+        rerolls = document.getElementById("rerolls").value;
+
+        if (rerolls < 0) rerolls = 0;
+        if (!Number.isInteger(parseInt(rerolls))) return alert("Rerolls must be a number!");
+
+        console.log("V is", toggleV);
+        console.log("RF is", toggleRF);
+        console.log("GS is", toggleGS);
+
+        selectionPool = [];
+
+        if (toggleV) {
+          selectionPool.push(...civilizations);
+        }
+        if (toggleRF) {
+          selectionPool.push(...rfCivilizations);
+        }
+        if (toggleGS) {
+          selectionPool.push(...gsCivilizations);
+        }
+
+        if (selectionPool.length === 0) return alert("You must select at least one of the civilization selections");
+
+        console.log(selectionPool);
+
+        return rerolls;
+      }
+
+      function addPlayer() {
+        console.log("Adding new player");
+        players.push({ name: 'New player' });
+        buildPlayerList();
+      }
+      function removePlayer(index) {
+        console.log("Removing player at index", index);
+        players.splice(index, 1);
+        buildPlayerList();
+      }
+
+      function buildPlayerList() {
+        console.log(`Building player list for ${players.length} players`);
+        html = '';
+        players.forEach((player, index) => {
+          html += `
+          <tr>
+            <td>Player ${index + 1}</td>
+            <td><input type="text" id="player-${index}-name" value="${player.name}" onchange="updateData(this, ${index})" class="form-control"></td>
+            <td><button type="button" onclick="removePlayer(${index})" class="btn btn-danger btn-sm">Remove player</button></td>
+          </tr>
+          `;
+        });
+
+        document.getElementById("pList").innerHTML = html;
+      }
+
+      function updateData(object, index) {
+        console.log("Updating player data");
+        players[index].name = object.value
+      }
+
+      function rollCivilizations() {
+        console.log("Rolling civilizations");
+        players.forEach((player, index) => {
+          let random = Math.floor(Math.random() * selectionPool.length);
+          player.civilization = selectionPool[random];
+          player.rerolls = rerolls;
+          selectionPool.splice(random, 1);
+        });
+      }
+
+      function buildResults() {
+        console.log("Building results HTML");
+        resultHTML = '';
+
+        players.forEach((player, index) => {
+          if (player.rerolls > 0) {
+            resultHTML += `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${player.name}</td>
+              <td><img src="images/${player.civilization.replace(/ /g, "_").toLowerCase()}.webp" class="rounded mr-1">${player.civilization}</td>
+              <td>${player.rerolls}</td>
+              <td><button class="btn btn-warning btn-sm" onclick="reroll(${index})">Reroll</button>
+            </tr>
+            `;
+          }
+          else {
+            resultHTML += `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${player.name}</td>
+              <td><img src="images/${player.civilization.replace(/ /g, "_").toLowerCase()}.webp" class="rounded mr-1">${player.civilization}</td>
+              <td>${player.rerolls}</td>
+              <td><button class="btn btn-warning btn-sm" onclick="reroll(${index})" disabled>Reroll</button>
+            </tr>
+            `;
+          }
+        });
+
+        document.getElementById("result").innerHTML = resultHTML;
+      }
+
+      function reroll(index) {
+        if (players[index].rerolls < 1) return alert("No more rerolls available");
+        console.log("Rerolling civilization for player", index);
+        let random = Math.floor(Math.random() * selectionPool.length);
+        players[index].civilization = selectionPool[random];
+        players[index].rerolls -= 1;
+        selectionPool.splice(random, 1);
+        buildResults();
+      }
+
+      document.getElementById("run").onclick = () => {
+        console.log("Running randomization");
+        runSelection();
+        rollCivilizations();
+        buildResults();
+      }
+
+      // Initialize
+      addPlayer();
+      buildPlayerList();
+    </script>
+  </body>
+</html>
