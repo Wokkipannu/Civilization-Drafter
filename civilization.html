@@ -83,7 +83,7 @@
           <h4>Result</h4>
         </div>
         <div class="col">
-          <a href="#" onclick="share()" class="d-none">Share</a>
+          <a href="#" onclick="share()">Share</a>
         </div>
       </div>
 
@@ -115,11 +115,10 @@
       let rerolls = null;
       let amount = null;
 
-      let urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has(players)) {
-        players = JSON.parse(urlParams.get(players));
-        buildResults();
-      }
+      let toggleV = false;
+      let toggleRF = false;
+      let toggleGS = false;
+      let toggleDLC = false;
 
       let dlcCivilizations = [
         "Jadwiga",
@@ -179,10 +178,10 @@
       ];
 
       function runSelection() {
-        let toggleV = document.getElementById("vCheckbox").checked;
-        let toggleRF = document.getElementById("rfCheckbox").checked;
-        let toggleGS = document.getElementById("gsCheckbox").checked;
-        let toggleDLC = document.getElementById("dlcCheckbox").checked;
+        toggleV = document.getElementById("vCheckbox").checked;
+        toggleRF = document.getElementById("rfCheckbox").checked;
+        toggleGS = document.getElementById("gsCheckbox").checked;
+        toggleDLC = document.getElementById("dlcCheckbox").checked;
         rerolls = document.getElementById("rerolls").value;
         amount = document.getElementById("amount").value;
 
@@ -315,7 +314,7 @@
       }
 
       function share() {
-        let link = `http://www.wokki.gg/civilizations.html?players=${JSON.stringify(players)}`;
+        let link = `http://www.wokki.gg/civilizations.html?players=${JSON.stringify(players)}&vanilla=${toggleV}&rf=${toggleRF}&gs=${toggleGS}&dlc=${toggleDLC}`;
         return prompt("Share link", link);
       }
 
@@ -326,8 +325,32 @@
         buildResults();
       }
 
-      // Add first player
-      addPlayer();
+      let urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has("players")) {
+        if (urlParams.has("vanilla")) {
+          toggleV = JSON.parse(urlParams.get("vanilla"));
+          document.getElementById("vCheckbox").checked = JSON.parse(urlParams.get("vanilla"));
+        }
+        if (urlParams.has("rf")) {
+          toggleRF = JSON.parse(urlParams.get("rf"));
+          document.getElementById("rfCheckbox").checked = JSON.parse(urlParams.get("rf"));
+        }
+        if (urlParams.has("gs")) {
+          toggleGS = JSON.parse(urlParams.get("gs"));
+          document.getElementById("gsCheckbox").checked = JSON.parse(urlParams.get("gs"));
+        }
+        if (urlParams.has("dlc")) {
+          toggleDLC = JSON.parse(urlParams.get("dlc"));
+          document.getElementById("dlcCheckbox").checked = JSON.parse(urlParams.get("dlc"));
+        }
+
+        players = JSON.parse(urlParams.get("players"));
+        buildPlayerList();
+        buildResults();
+      }
+      else {
+        addPlayer();
+      }
     </script>
   </body>
 </html>
