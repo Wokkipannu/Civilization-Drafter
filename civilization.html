@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Civ</title>
+    <title>Civilization VI Leader Drafter</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="bootstrap.min.css">
   </head>
@@ -41,6 +41,12 @@
           <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="gsCheckbox">
             <label class="custom-control-label" for="gsCheckbox">Gathering Storm Civilizations</label>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="dlcCheckbox">
+            <label class="custom-control-label" for="dlcCheckbox">DLC Civilizations</label>
           </div>
         </div>
       </div>
@@ -90,10 +96,19 @@
       let rerolls = null;
       let amount = null;
 
+      let dlcCivilizations = [
+        "Jadwiga",
+        "Amanitore",
+        "Cyrus",
+        "Jayavarman VII",
+        "Alexander",
+        "Gitarja",
+        "John Curtin"
+      ]
+
       let civilizations = [
         "Teddy Roosevelt",
         "Saladin",
-        "John Curtin",
         "Montezuma",
         "Pedro II",
         "Qin Shi Huang",
@@ -103,15 +118,9 @@
         "Perciles",
         "Gorgo",
         "Gandhi",
-        "Gitarja",
         "Hojo Tokimune",
-        "Jayavarman VII",
         "Mvemba a Nzinga",
-        "Alexander",
         "Harald Hardrada",
-        "Amanitore",
-        "Cyrus",
-        "Jadwiga",
         "Trajan",
         "Peter",
         "Tomyris",
@@ -148,6 +157,7 @@
         let toggleV = document.getElementById("vCheckbox").checked;
         let toggleRF = document.getElementById("rfCheckbox").checked;
         let toggleGS = document.getElementById("gsCheckbox").checked;
+        let toggleDLC = document.getElementById("dlcCheckbox").checked;
         rerolls = document.getElementById("rerolls").value;
         amount = document.getElementById("amount").value;
 
@@ -162,6 +172,7 @@
         console.log("V is", toggleV);
         console.log("RF is", toggleRF);
         console.log("GS is", toggleGS);
+        console.log("DLC is", toggleDLC);
 
         selectionPool = [];
 
@@ -173,6 +184,9 @@
         }
         if (toggleGS) {
           selectionPool.push(...gsCivilizations);
+        }
+        if (toggleDLC) {
+          selectionPool.push(...dlcCivilizations);
         }
 
         if (selectionPool.length === 0) return alert("You must select at least one of the civilization selections");
