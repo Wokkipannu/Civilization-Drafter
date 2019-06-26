@@ -78,6 +78,10 @@
       </table>
     </div>
 
+    <footer class="container">
+      <small>Civilization VI Drafter by Wokkipannu • <a href="https://github.com/Wokkipannu/Civilization-Drafter">Github</a></small>
+    </footer>
+
     <script type="text/javascript">
       let selectionPool = [];
       let players = [];
@@ -233,7 +237,7 @@
             <tr>
               <td>${index + 1}</td>
               <td>${player.name}</td>
-              <td>${player.civilizations.map(civ => `<img src="images/${civ.replace(/ /g, "_").toLowerCase()}.webp" class="rounded mr-1"> ${civ}`).join(", ")}</td>
+              <td>${player.civilizations.map(civ => `<img src="images/${civ.replace(/ /g, "_").toLowerCase()}.webp" class="rounded mr-1 ml-1"> ${civ}`).join(", ")}</td>
               <td>${player.rerolls}</td>
               <td><button class="btn btn-warning btn-sm" onclick="reroll(${index})">Reroll</button>
             </tr>
@@ -244,7 +248,7 @@
             <tr>
               <td>${index + 1}</td>
               <td>${player.name}</td>
-              <td>${player.civilizations.map(civ => `<img src="images/${civ.replace(/ /g, "_").toLowerCase()}.webp" class="rounded mr-1"> ${civ}`).join(", ")}</td>
+              <td>${player.civilizations.map(civ => `<img src="images/${civ.replace(/ /g, "_").toLowerCase()}.webp" class="rounded mr-1 ml-1"> ${civ}`).join(", ")}</td>
               <td>${player.rerolls}</td>
               <td><button class="btn btn-warning btn-sm" onclick="reroll(${index})" disabled>Reroll</button>
             </tr>
