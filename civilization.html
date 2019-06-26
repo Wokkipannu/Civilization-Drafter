@@ -278,7 +278,7 @@
             <tr>
               <td>${index + 1}</td>
               <td>${player.name}</td>
-              <td>${player.civilizations.map(civ => `<img src="images/${civ.replace(/ /g, "_").toLowerCase()}.webp" class="rounded mr-1 ml-1"> ${civ}`).join(", ")}</td>
+              <td>${player.civilizations.map(civ => `<img src="images/${civ.replace(/ /g, "_")}.webp" class="rounded mr-1 ml-1"> ${civ.replace(/_/g, " ")}`).join(", ")}</td>
               <td>${player.rerolls}</td>
               <td><button class="btn btn-warning btn-sm" onclick="reroll(${index})">Reroll</button>
             </tr>
@@ -289,7 +289,7 @@
             <tr>
               <td>${index + 1}</td>
               <td>${player.name}</td>
-              <td>${player.civilizations.map(civ => `<img src="images/${civ.replace(/ /g, "_").toLowerCase()}.webp" class="rounded mr-1 ml-1"> ${civ}`).join(", ")}</td>
+              <td>${player.civilizations.map(civ => `<img src="images/${civ.replace(/ /g, "_")}.webp" class="rounded mr-1 ml-1"> ${civ.replace(/_/g, " ")}`).join(", ")}</td>
               <td>${player.rerolls}</td>
               <td><button class="btn btn-warning btn-sm" onclick="reroll(${index})" disabled>Reroll</button>
             </tr>
@@ -314,7 +314,7 @@
       }
 
       function share() {
-        let link = `http://www.wokki.gg/civilizations.html?players=${JSON.stringify(players)}&vanilla=${toggleV}&rf=${toggleRF}&gs=${toggleGS}&dlc=${toggleDLC}`;
+        let link = `http://wokki.gg/civilization.html?players=${JSON.stringify(players)}&vanilla=${toggleV}&rf=${toggleRF}&gs=${toggleGS}&dlc=${toggleDLC}`.replace(/ /g, '_');
         return prompt("Share link", link);
       }
 
