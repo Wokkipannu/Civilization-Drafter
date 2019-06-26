@@ -22,7 +22,19 @@
           <!-- Data will be populated by JavaScript -->
         </tbody>
       </table>
-      <button type="button" id="addPlayer" onclick="addPlayer()" class="btn btn-success btn-sm">Add player</button>
+
+      <div class="input-group mb-3 w-25"> <!-- w-25 works as a temporary solution to the input being long as fuck -->
+        <div class="input-group-prepend">
+          <button type="button" id="addPlayer" onclick="addPlayer()" class="btn btn-success btn-sm">Add player(s)</button>
+        </div>
+        <select class="custom-select" id="pToAdd">
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>  
+      </div>
       <br/><br/>
       <div class="row">
         <div class="col-md-3">
@@ -66,7 +78,14 @@
 
       <hr/>
 
-      <h4>Result</h4>
+      <div class="row">
+        <div class="col">
+          <h4>Result</h4>
+        </div>
+        <div class="col">
+          <a href="#" onclick="share()" class="d-none">Share</a>
+        </div>
+      </div>
 
       <table class="table">
         <thead>
@@ -95,6 +114,12 @@
       let html = '';
       let rerolls = null;
       let amount = null;
+
+      let urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has(players)) {
+        players = JSON.parse(urlParams.get(players));
+        buildResults();
+      }
 
       let dlcCivilizations = [
         "Jadwiga",
@@ -197,8 +222,11 @@
       }
 
       function addPlayer() {
-        console.log("Adding new player");
-        players.push({ name: 'New player' });
+        console.log("Adding new player(s)");
+        let am = document.getElementById("pToAdd").value;
+        for (let i = 0; i < am; i++) {
+          players.push({ name: 'New player' });
+        }
         buildPlayerList();
       }
       function removePlayer(index) {
@@ -286,6 +314,11 @@
         buildResults();
       }
 
+      function share() {
+        let link = `http://www.wokki.gg/civilizations.html?players=${JSON.stringify(players)}`;
+        return prompt("Share link", link);
+      }
+
       document.getElementById("run").onclick = () => {
         console.log("Running randomization");
         runSelection();
@@ -293,9 +326,8 @@
         buildResults();
       }
 
-      // Initialize
+      // Add first player
       addPlayer();
-      buildPlayerList();
     </script>
   </body>
 </html>
